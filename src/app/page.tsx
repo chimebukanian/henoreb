@@ -3,7 +3,9 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, useScroll, useSpring } from "framer-motion";
-import { ArrowRight, CheckCircle2, Mail, Phone, MapPin, Sparkles, Target, ShieldCheck, Users2, LineChart, Briefcase, Building2, Gem, Rocket, HeartHandshake } from "lucide-react";
+import { Menu, X, ArrowRight, CheckCircle2, Mail, Phone, MapPin, Sparkles, Target, ShieldCheck, Users2, LineChart, Briefcase, Building2, Gem, Rocket, HeartHandshake } from "lucide-react";
+// Don't forget to import useState and your icon components (like Menu and X)
+import { useState } from 'react';
 
 /**
  * Henoreb Consulting – Modern Portfolio Landing Page
@@ -78,31 +80,58 @@ const ScrollProgress = () => {
 };
 
 // NAVBAR
-const NavBar: React.FC = () => (
-  <div className="sticky top-0 z-40 w-full border-b border-white/10 bg-slate-950/70 backdrop-blur">
-    <Container className="flex h-16 items-center justify-between">
-      <div className="flex items-center gap-3">
-        <Image src="/images/logo.svg" alt="Henoreb" width={32} height={32} />
-        <span className="text-white/90 text-sm sm:text-base">Henoreb Consulting</span>
-      </div>
-      <nav className="hidden items-center gap-6 text-sm text-white/80 md:flex">
-        <Link href="#about" className="hover:text-white">About</Link>
-        <Link href="#services" className="hover:text-white">Services</Link>
-        <Link href="#values" className="hover:text-white">Values</Link>
-        <Link href="#team" className="hover:text-white">Team</Link>
-        <Link href="#contact" className="hover:text-white">Contact</Link>
-      </nav>
-      <Link href="#contact" className="inline-flex items-center gap-2 rounded-full border border-teal-400/30 bg-teal-500/10 px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-teal-300 hover:bg-teal-500/20">
-        Let’s talk <ArrowRight className="h-4 w-4" />
-      </Link>
-    </Container>
-  </div>
-);
+
+const NavBar: React.FC = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  return (
+    <div className="sticky top-0 z-40 w-full border-b border-white/10 bg-slate-950/70 backdrop-blur">
+      <Container className="flex h-16 items-center justify-between">
+        <div className="flex items-center gap-3">
+          <Image src="/images/logo.svg" className="h-30 w-30" alt="Henoreb" width={32} height={32} />
+          <span className="text-white/90 text-sm sm:text-base hidden md:inline">Henoreb Consulting</span>
+        </div>
+
+        {/* Desktop Navigation */}
+        <nav className="hidden items-center gap-6 text-sm text-white/80 md:flex">
+          <Link href="#about" className="hover:text-white">About</Link>
+          <Link href="#services" className="hover:text-white">Services</Link>
+          <Link href="#values" className="hover:text-white">Values</Link>
+          <Link href="#team" className="hover:text-white">Team</Link>
+          <Link href="#contact" className="hover:text-white">Contact</Link>
+        </nav>
+
+        {/* Mobile menu button */}
+        <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden text-white/80">
+          {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+        </button>
+
+        {/* Call to action button for all screen sizes */}
+        <Link href="#contact" className="inline-flex items-center gap-2 rounded-full border border-teal-400/30 bg-teal-500/10 px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-teal-300 hover:bg-teal-500/20">
+          Let’s talk <ArrowRight className="h-4 w-4" />
+        </Link>
+      </Container>
+
+      {/* Mobile Dropdown Menu */}
+      {isMenuOpen && (
+        <div className="absolute top-16 left-0 w-full border-t border-white/10 bg-slate-950/90 md:hidden">
+          <nav className="flex flex-col items-center gap-4 py-4 text-white/80">
+            <Link href="#about" onClick={() => setIsMenuOpen(false)} className="hover:text-white">About</Link>
+            <Link href="#services" onClick={() => setIsMenuOpen(false)} className="hover:text-white">Services</Link>
+            <Link href="#values" onClick={() => setIsMenuOpen(false)} className="hover:text-white">Values</Link>
+            <Link href="#team" onClick={() => setIsMenuOpen(false)} className="hover:text-white">Team</Link>
+            <Link href="#contact" onClick={() => setIsMenuOpen(false)} className="hover:text-white">Contact</Link>
+          </nav>
+        </div>
+      )}
+    </div>
+  );
+};
 
 // HERO
 const Hero: React.FC = () => (
   <div className="relative overflow-hidden bg-[radial-gradient(1000px_500px_at_20%_-10%,#0ea5a2_0%,transparent_60%),radial-gradient(1000px_600px_at_120%_-10%,#0b3b66_0%,transparent_60%)]">
-    <Section className="pt-20 sm:pt-24" id="home">
+    <Section className="md:pt-8 sm:pt-24" id="home">
       <div className="grid items-center gap-10 lg:grid-cols-2">
         <div>
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
@@ -150,11 +179,11 @@ const Hero: React.FC = () => (
 // WHY HENOREB – badges
 const WhyList: React.FC = () => {
   const points = [
-    "International experience & industry depth",
-    "Vast network delivering exceptional value",
-    "Core values drive our practices (RISE)",
-    "Multi-disciplinary, sustainable solutions",
-    "Client-first & compliance-led",
+    "Our core values define our business practices ",
+    "we possess international experience and industry depth required to solve problems",
+    "We have a vast network of professionals that deliver exceptional value",
+    "We take a multi-disciplinary approach to provide sustainable solutions for our clients", 
+    "We prioritize our clients satisfaction and comply with relevant regulations",
     "Robust, tested frameworks; co-created",
   ];
   return (
@@ -176,11 +205,14 @@ const services = {
     "Organisation Design",
     "Change Management",
     "Culture",
-    "Strategic Workforce Planning",
+    "Strategic Workforce Planning"
+  ],
+  "Talent Management": [
     "Recruitment",
     "Performance Management",
-    "Learning & Development",
-    "Career & Succession Management",
+    "Learning and Development",
+    "Career Management",
+    "Succession Management",
     "Competency Framework",
     "Employee Engagement & Experience",
     "Capability Assessment",
@@ -188,17 +220,10 @@ const services = {
     "Job Evaluation",
     "Total Rewards",
   ],
-  "Talent Management": [
-    "Workforce Planning",
-    "Recruitment & Selection",
-    "Competency Frameworks",
-    "Performance & Rewards",
-    "Learning & Development",
-  ],
   "HR Function Optimization": [
     "HR Strategy",
-    "Operating Model",
-    "Policies & Processes",
+    "Hr Operating Model",
+    "Hr Policies & Processes",
     "HR Maturity Assessment",
   ],
 };
@@ -237,7 +262,7 @@ const ValueCard: React.FC<{ title: string; desc: string; icon: React.ElementType
 const TeamCard: React.FC<{ name: string; title: string; bio: string; img: string }> = ({ name, title, bio, img }) => (
   <GradientBorderCard>
     <div className="flex items-start gap-5">
-      <img src={img} alt={name} className="h-20 w-20 rounded-2xl object-cover ring-1 ring-white/10" />
+      <img src={img} alt={name} className="h-40 w-36 rounded-2xl object-cover ring-1 ring-white/10" />
       <div>
         <h3 className="text-white text-lg font-semibold">{name}</h3>
         <p className="text-teal-300 text-sm font-medium">{title}</p>
@@ -295,11 +320,18 @@ export default function Page() {
       <Hero />
 
       {/* ABOUT */}
-      <Section id="about" headline="About Henoreb" sub="Forward-thinking. Evolving. Client-focused.">
+      <Section id="about" headline="About Henoreb" sub="Excellence is at the heart of everything we do… ">
         <div className="grid gap-10 lg:grid-cols-2">
           <div className="space-y-6">
             <p className="text-white/80">
-              Founded in 2024, Henoreb Consulting is a management consulting firm dedicated to empowering organisations in their pursuit of excellence and sustainable growth.
+              Henoreb Consulting Limited (Henoreb) was 
+founded in September 2024. Henoreb is a 
+forward-thinking and evolving management 
+consulting firm dedicated to empowering 
+organizations in their pursuit of excellence 
+and sustainable growth. 
+We are committed to providing tailored 
+solutions to solve business problems.
             </p>
             <div className="grid gap-4 sm:grid-cols-2">
               <GradientBorderCard>
@@ -307,7 +339,8 @@ export default function Page() {
                   <Target className="mt-1 h-5 w-5 text-teal-300" />
                   <div>
                     <h3 className="font-semibold">Vision</h3>
-                    <p className="text-sm text-white/70">To be the preferred firm for tailored, sustainable business solutions in Africa.</p>
+                    <p className="text-sm text-white/70"> To be the preferred firm that provides tailored 
+and sustainable business solutions in Africa.</p>
                   </div>
                 </div>
               </GradientBorderCard>
@@ -316,7 +349,8 @@ export default function Page() {
                   <Rocket className="mt-1 h-5 w-5 text-teal-300" />
                   <div>
                     <h3 className="font-semibold">Mission</h3>
-                    <p className="text-sm text-white/70">Help organisations achieve excellence by aligning talent and strategy for lasting success.</p>
+                    <p className="text-sm text-white/70"> To help organisations achieve excellence by 
+aligning talent and strategy for lasting success.</p>
                   </div>
                 </div>
               </GradientBorderCard>
@@ -333,12 +367,20 @@ export default function Page() {
       </Section>
 
       {/* VALUES */}
-      <Section id="values" headline="RISE: Our Core Values" sub="The foundation of our culture">
+      <Section id="values" headline="Our Core Values (RISE) defines us..." sub="The foundation of our culture">
+        <p className="text-white/80 mb-4"> RISE is the foundation 
+of our culture. It guides 
+our ways of working 
+and interactions with 
+clients, partners, and 
+each other</p>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           <ValueCard title="Respect" icon={HeartHandshake} desc="We value every individual and promote a culture of inclusivity." />
           <ValueCard title="Integrity" icon={ShieldCheck} desc="We conduct business with honesty and transparency." />
-          <ValueCard title="Service" icon={Users2} desc="We meet client needs with dedication and professionalism." />
-          <ValueCard title="Excellence" icon={Gem} desc="We strive for the highest standards in all we do." />
+          <ValueCard title="Service" icon={Users2} desc="We are committed to meeting the needs of 
+our clients with dedication and 
+professionalism" />
+          <ValueCard title="Excellence" icon={Gem} desc="We strive for the highest standards in all we do" />
         </div>
       </Section>
 
@@ -358,13 +400,35 @@ export default function Page() {
             name="Rita Okene, ACIPM, SHRM‑SCP"
             title="Partner – Management Consulting"
             img="/images/rita.jpg"
-            bio="Proven expertise delivering tailored solutions across Africa, with leadership experience at PwC, Deloitte, and Baker Tilly. B.Sc. Psychology (OAU), ACIPM, SHRM‑SCP, Certified PPA Practitioner; currently pursuing an MBA at Nexford University."
+            bio=" Rita leads the management consulting practice 
+at Henoreb Consulting Limited. She has worked in PwC, Deloitte, Baker Tilly amongst others. She 
+has proven expertise in providing tailored solutions to clients and 
+leading teams across Africa. Rita leads organisations to build the 
+talent capabilities required to navigate an agile, disruptive and 
+human world. 
+Rita holds a Bachelors in Psychology from Obafemi Awolowo 
+University, is an Associate of Chartered Institute of Personnel 
+Management (ACIPM), a Senior Certified Professional of Society of 
+Human Resource Management (SHRM-SCP) and a Certified Personal 
+Profile Analysis (PPA) Practitioner. She is currently pursuing her MBA 
+at Nexford University."
           />
           <TeamCard
             name="Tarekeyi Okene, SHRM‑CP"
             title="Partner – Human Capital Consulting"
             img="/images/tare.jpg"
-            bio="Result‑driven HR professional aligning HR strategy and operations with business goals. Experience across HR strategy, skills assessment, total rewards, performance, change and organisation design. B.Sc. Sociology & Anthropology (Uniben), SHRM‑CP."
+            bio="Tare is a passionate and result-driven certified 
+Human Resource professional with a proven track record in aligning HR Strategy and operations with organizational 
+goals. She started her career in a big 4 consulting firm. 
+Tare’s experience spans across HR strategy, skills assessment, total 
+rewards, recruitment, performance management, change management, 
+organisation design, culture, learning and development, grading 
+structure, employee experience and engagement, competency 
+framework, HR operational excellence, HR operating model, human 
+capital assessment.
+ Tare holds a Bachelors in Sociology and Anthropology from University of 
+Benin, and is a Certified Professional of Society of Human Resource 
+Management (SHRM-CP)."
           />
         </div>
       </Section>
@@ -375,8 +439,8 @@ export default function Page() {
           <div className="relative rounded-3xl border border-white/10 bg-[radial-gradient(1200px_400px_at_-20%_-40%,rgba(14,165,162,0.25),transparent_60%),radial-gradient(1000px_400px_at_120%_140%,rgba(234,179,8,0.2),transparent_60%)] p-8 sm:p-12">
             <div className="flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between">
               <div>
-                <h3 className="text-2xl font-semibold text-white">Ready to drive excellence?</h3>
-                <p className="text-white/70">Let’s co‑create the right solution for your organisation.</p>
+                <h3 className="text-2xl font-semibold text-white">Supported by other Industry and Subject Matter Experts (SMEs)</h3>
+                <p className="text-white/70"> We look forward to working with you</p>
               </div>
               <a href="#contact" className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-teal-500 to-teal-400 px-5 py-3 font-semibold text-slate-950 shadow-lg shadow-teal-500/30">
                 Start a conversation <ArrowRight className="h-5 w-5" />
